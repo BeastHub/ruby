@@ -15,6 +15,8 @@ class Letter
     attr_writer :endTime
     attr_writer :durationTime
     attr_writer :textDuration
+    attr_writer :fallingSpeed
+
     def initialize()
         @startTime = Time.now
         @durationTime = 0
@@ -22,6 +24,7 @@ class Letter
         @character = @letters[rand(@letters.length)]
         @x = rand(1..WIDTH-SIZE)
         @y = rand(1..HEIGHT/2)
+        @fallingSpeed = 4
     end
     def startTime
         @startTime
@@ -47,6 +50,9 @@ class Letter
     end
     def y
         @y
+    end
+    def fallingSpeed
+        @fallingSpeed
     end
     def textLetter
         @textLetter
@@ -86,6 +92,8 @@ on :key_down do |event|
         start = true
     elsif(event.key == "escape")
         exit(true)
+    else
+        letter.fallingSpeed += 0.5
     end
 end
 def gameOver(scores)
@@ -109,7 +117,7 @@ update do
         if(!gameover)
             clear
             keysText = Text.new(keys, color: "black", x: WIDTH/2, y: 10, size: SIZE*3)
-            letter.y += 5
+            letter.y += letter.fallingSpeed
             letter.draw
             if(letter.textLetter.y >= HEIGHT)
                 gameover = true
